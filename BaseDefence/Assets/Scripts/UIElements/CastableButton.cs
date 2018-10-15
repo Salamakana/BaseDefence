@@ -4,26 +4,28 @@ using UnityEngine.EventSystems;
 public class CastableButton : BaseUIButton, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField]
-    private Castable Castable;
-    public int CastCost
+    private CastableBlueprint castableBlueprint;
+
+    public CastableBlueprint CastableBlueprint
     {
-        get;
-        private set;
+        get
+        {
+            return castableBlueprint;
+        }
     }
 
     private void Start()
     {
-        unityEvent.AddListener(DragCastable);
-        CastCost = Castable.castCost;
+        unityEvent.AddListener(StartDragCastable);
     }
 
-    private void DragCastable()
+    private void StartDragCastable()
     {
-        var newSelectableObject = ObjectPoolManager.Instance.GetObjectFromPool(Castable.PrefabToCast.name, InputManager.Instance.MouseHitPoint, Quaternion.identity).GetComponent<SelectableObject>();
+        var newSelectableObject = ObjectPoolManager.Instance.GetObjectFromPool(CastableBlueprint.PrefabToCast.name, InputManager.Instance.MouseHitPoint, Quaternion.identity).GetComponent<SelectableObject>();
         if (newSelectableObject != null)
         {
-            InputManager.Instance.SelectableObject = newSelectableObject;
-            InputManager.Instance.ViewRange.ShowViewRadius(newSelectableObject.transform, newSelectableObject.ViewRadius);
+            InputManager.Instance.CurrentlySelectableObject = newSelectableObject;
+            InputManager.Instance.ViewRange.ShowViewRadius(newSelectableObject.transform, newSelectableObject.SelectableRadius);
         }
     }
 
@@ -37,11 +39,17 @@ public class CastableButton : BaseUIButton, IBeginDragHandler, IDragHandler, IEn
 
     public void OnDrag(PointerEventData eventData)
     {
-       
+
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        
+       
+    }
+
+    public override void OnPointerDown(PointerEventData eventData)
+    {
+        base.OnPointerDown(eventData);
+        UIManager.Instance.UpdateSelectedObjectInfo(this, CastableBlueprint);
     }
 }

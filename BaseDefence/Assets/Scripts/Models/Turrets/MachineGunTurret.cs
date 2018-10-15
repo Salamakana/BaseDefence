@@ -6,19 +6,17 @@ public class MachineGunTurret : BaseTurret
     private GameObject muzzleEffects;
     private ParticleSystem gunImpactEffect;
 
-    private float machineGunDamage = 40f;
+    private readonly float machineGunDamage = 40f;
 
     private MachineGunTurret()
     {
-        viewRadius = 10f;
-        buildCost = 100;
+        turrentAttackRadius = 10f;
         rotationSpeed = 200f;
     }
 
     protected override void Awake()
     {
         base.Awake();
-
         machineGunEffect = firePoint.Find("MachineGunImpactEffect").gameObject;
         gunImpactEffect = machineGunEffect.GetComponentInChildren<ParticleSystem>();
         muzzleEffects = firePoint.transform.Find("MuzzleEffects").gameObject;

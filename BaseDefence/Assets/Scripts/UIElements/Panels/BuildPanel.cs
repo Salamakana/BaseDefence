@@ -6,13 +6,13 @@ public class BuildPanel : BasePanel
 
     private void Awake()
     {
-        castableButtons = GetComponents<CastableButton>();
+        castableButtons = GetComponentsInChildren<CastableButton>();
     }
 
-    public void CreateTurret(string turretType)
+    public void CreatePrefabInstance(string prefabName)
     {
         ObjectPoolManager.Instance.GetObjectFromPool
-        (turretType,
+        (prefabName,
         InputManager.Instance.MouseHitPoint,
         Quaternion.identity
         );
@@ -23,8 +23,7 @@ public class BuildPanel : BasePanel
         foreach (var castableButton in castableButtons)
         {
             var currentEnergy = PlayerStats.Instance.CurrentEnergy;
-
-            castableButton.SetActiveState((currentEnergy -= castableButton.CastCost) < 0 ? false : true);
+            castableButton.SetActiveState((currentEnergy -= castableButton.CastableBlueprint.EnergyCost) < 0 ? false : true);
         }
     }
 

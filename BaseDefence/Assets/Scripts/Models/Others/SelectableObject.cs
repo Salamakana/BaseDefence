@@ -1,31 +1,28 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectableObject : MonoBehaviour
-{   
-    private Stack<Collider> hitColliders = new Stack<Collider>();
+public abstract class SelectableObject : MonoBehaviour
+{
+    #region VARIABLES
 
-    private BaseTurret baseTurret;
+    private Stack<Collider> hitColliders = new Stack<Collider>();
     private Collider hitCollider;
     private Vector3 LastPlacementPosition;
+
+    #endregion VARIABLES
+
+    #region PROPERTIES
 
     public Rigidbody Rb
     {
         get;
         private set;
     }
-
-    public float ViewRadius
+    public float SelectableRadius
     {
         get;
-        private set;
+        protected set;
     }
-    public int BuildCost
-    {
-        get;
-        private set;
-    }
-
     public bool IsCollision
     {
         get
@@ -33,28 +30,27 @@ public class SelectableObject : MonoBehaviour
             return hitColliders.Count > 0 ? true : false;
         }
     }
-
-    public bool IsBuild
+    public bool IsFirstPlacement
     {
         get;
         private set;
     }
-    
-    private void Awake()
+
+    #endregion PROPERTIES
+
+    protected virtual void Awake()
     {
         Rb = GetComponent<Rigidbody>();
         hitCollider = GetComponent<Collider>();
-
-        CheckIfTurret();
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         Rb.isKinematic = false;
-        IsBuild = false;
+        IsFirstPlacement = true;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {     
         hitColliders.Clear();
     }
@@ -64,7 +60,7 @@ public class SelectableObject : MonoBehaviour
         if (hitCollider.isTrigger)
             hitColliders.Push(other);
     }
-    
+
     private void OnTriggerExit(Collider other)
     {
         if (hitCollider.isTrigger && IsCollision)
@@ -81,37 +77,19 @@ public class SelectableObject : MonoBehaviour
 
     public void SuccessfulPlacement()
     {
-        CheckIfBuilt();
+        if (IsFirstPlacement)
+        {
+            IsFirstPlacement = false;
+            PlayerStats.Instance.AddEnergy(-InputManager.Instance.CurrentCastableButtonSelected.CastableBlueprint.EnergyCost);
+        }
 
         Rb.isKinematic = true;
         LastPlacementPosition = transform.position;
-
-        // Debug.Log("SuccessfulPlacement");
     }
 
     public void ReplaceObject()
     {
         Rb.isKinematic = true;
         transform.position = LastPlacementPosition;
-    }
-
-    private void CheckIfTurret()
-    {
-        var baseTurret = GetComponent<BaseTurret>();
-        if (baseTurret != null)
-        {
-            this.baseTurret = baseTurret;
-            ViewRadius = this.baseTurret.ViewRadius;
-            BuildCost = this.baseTurret.BuildCost;
-        }
-    }
-
-    private void CheckIfBuilt()
-    {
-        if (!IsBuild)
-        {
-            IsBuild = true;
-            PlayerStats.Instance.AddEnergy(-BuildCost);        
-        }
     }
 }

@@ -9,8 +9,7 @@ public class MissileTurret : BaseTurret
         fireRate = 0.5f;
         fireCountdown = 1f;
 
-        viewRadius = 25f;
-        buildCost = 400;
+        turrentAttackRadius = 25f;
         rotationSpeed = 80f;
     }
 

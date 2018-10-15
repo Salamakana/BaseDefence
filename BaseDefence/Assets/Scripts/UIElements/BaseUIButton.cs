@@ -37,12 +37,12 @@ public class BaseUIButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         icon.color = isActive ? activeColor : disableColor;
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         transform.localScale = activeScale;
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public virtual void OnPointerUp(PointerEventData eventData)
     {
         transform.localScale = defaultScale;
     }

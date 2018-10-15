@@ -3,16 +3,14 @@
     public float MaxEnergy
     {
         get;
-        set;
+        private set;
     }
-
     public float CurrentEnergy
     {
         get;
         private set;
     }
-
-    private readonly float startEnergy = 2000f;
+    private readonly float startEnergy = 4000f;
 
     private void Start()
     {

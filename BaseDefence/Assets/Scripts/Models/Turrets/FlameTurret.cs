@@ -4,12 +4,11 @@ public class FlameTurret : BaseTurret
 {
     private ParticleSystem flamerEffect;
 
-    private float flamerDamage = 25f;
+    private readonly float flamerDamage = 25f;
 
     private FlameTurret()
     {
-        viewRadius = 10f;
-        buildCost = 100;
+        turrentAttackRadius = 10f;
         rotationSpeed = 400f;
     }
 

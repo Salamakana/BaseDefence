@@ -10,8 +10,7 @@ public class LaserTurret : BaseTurret
 
     private LaserTurret()
     {
-        viewRadius = 10f;
-        buildCost = 100;
+        turrentAttackRadius = 10f;
         rotationSpeed = 150f;       
     }
 

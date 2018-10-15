@@ -1,22 +1,21 @@
 ﻿using UnityEngine;
 
-public abstract class BaseTurret : MonoBehaviour
+public abstract class BaseTurret : SelectableObject
 {
     #region VARIABLES
 
     private StateMachine stateMachine = new StateMachine();
     private LayerMask searchLayer;
     private Transform rotatingPart;
-    private string targetTag = "Enemy";
+    private readonly string targetTag = "Enemy";
 
     protected Ray ray;
     protected RaycastHit raycastHit;
     protected Transform firePoint;
     protected float fireRate;
     protected float fireCountdown;
-    protected float viewRadius;
+    protected float turrentAttackRadius;
     protected float rotationSpeed;
-    protected int buildCost;
 
     #endregion VARIABLES
 
@@ -34,46 +33,35 @@ public abstract class BaseTurret : MonoBehaviour
             return CurrentTarget != null && CurrentTarget.gameObject.activeSelf == true;
         }
     }
-    public float ViewRadius
-    {
-        get
-        {
-            return viewRadius;
-        }
-    }
-    public int BuildCost
-    {
-        get
-        {
-            return buildCost;
-        }
-    }
 
     #endregion PROPERTIES
 
     protected abstract void Attack();
     protected abstract void StopAttack();
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         Initialize();
     }
 
-    protected virtual void Initialize()
+    private void Initialize()
     {
         rotatingPart = transform.Find("RotatingPart");
         firePoint = rotatingPart.Find("FirePoint");
         searchLayer = LayerMask.GetMask("Target");
+        SelectableRadius = turrentAttackRadius;
     }
 
-    protected virtual void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         stateMachine.ChangeState
             (
             new SearchState
             (gameObject, 
             searchLayer, 
-            viewRadius, 
+            turrentAttackRadius, 
             targetTag, 
             OnTargetFound
             ));
@@ -131,17 +119,17 @@ public abstract class BaseTurret : MonoBehaviour
     {
         //Debug.LogError("Target in sight!");
 
-        ray = new Ray(rotatingPart.position, rotatingPart.forward * viewRadius);
+        ray = new Ray(rotatingPart.position, rotatingPart.forward * turrentAttackRadius);
 
-        Debug.DrawRay(rotatingPart.position, rotatingPart.forward * viewRadius, Color.white);
+        Debug.DrawRay(rotatingPart.position, rotatingPart.forward * turrentAttackRadius, Color.white);
 
-        if (Physics.Raycast(ray, out raycastHit, viewRadius))
+        if (Physics.Raycast(ray, out raycastHit, turrentAttackRadius))
         {
             if (raycastHit.collider.CompareTag(targetTag))
             {
                 if (IsCurrentTargetValid)
                 {
-                    Debug.DrawRay(rotatingPart.position, rotatingPart.forward * viewRadius, Color.red);
+                    Debug.DrawRay(rotatingPart.position, rotatingPart.forward * turrentAttackRadius, Color.red);
                     Attack();
                     return;
                 }
@@ -155,7 +143,7 @@ public abstract class BaseTurret : MonoBehaviour
                        (
                        gameObject,
                        searchLayer,
-                       viewRadius,
+                       turrentAttackRadius,
                        targetTag,
                        OnTargetFound
                        ));
@@ -170,7 +158,7 @@ public abstract class BaseTurret : MonoBehaviour
                    (
                    gameObject,
                    searchLayer,
-                   viewRadius,
+                   turrentAttackRadius,
                    targetTag,
                    OnTargetFound
                    ));
