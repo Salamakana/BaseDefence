@@ -32,7 +32,7 @@ public class InputManager : Singelton<InputManager>
 
 	public SelectableObject CurrentlySelectableObject { get; set; }
 	public CastableButton CurrentCastableButtonSelected { get; set; }
-	public ViewRange ViewRange
+	public SelectableRadius SelectableRadius
 	{
 		get;
 		private set;
@@ -90,13 +90,13 @@ public class InputManager : Singelton<InputManager>
 		mainCameraEngine = Camera.main.GetComponentInParent<CameraEngine>();
 		moHit = new RaycastHit();
 
-		ViewRange = ObjectPoolManager.Instance.GetObjectFromPool
+		SelectableRadius = ObjectPoolManager.Instance.GetObjectFromPool
 			(
-			"ViewRange",
+			"SelectableRadius",
 			Vector3.zero, 
 			Quaternion.Euler(new Vector3(90, 0, 0)), 
 			false
-			).GetComponent<ViewRange>();
+			).GetComponent<SelectableRadius>();
 	}
 
 	private void Update()
@@ -158,13 +158,13 @@ public class InputManager : Singelton<InputManager>
 			{
 				CurrentlySelectableObject = newSelectableObject;
 				CurrentlySelectableObject.BeingSelected();
-				ViewRange.ShowViewRadius(CurrentlySelectableObject.transform, CurrentlySelectableObject.SelectableRadius);
+				SelectableRadius.ShowViewRadius(CurrentlySelectableObject.transform, CurrentlySelectableObject.SelectableRadius);
 			}
 		}
 		else
 		{
 			CurrentlySelectableObject = null;
-			ViewRange.ShowDisableViewRadius();
+			SelectableRadius.ShowDisableViewRadius();
 		}
 	}
 
@@ -191,12 +191,14 @@ public class InputManager : Singelton<InputManager>
 	private void DropMoveableObject()
 	{
 		if (CurrentlySelectableObject == null)
+		{
 			return;
-
+		}
+		
 		if (!IsOverUIElement() && !CurrentlySelectableObject.IsCollision)
 		{
 			 Debug.Log("SuccessfulPlacement");
-			CurrentlySelectableObject.SuccessfulPlacement();	
+			CurrentlySelectableObject.SuccessfulPlacement();
 		}
 		else if (CurrentlySelectableObject.IsFirstPlacement)
 		{
@@ -206,21 +208,19 @@ public class InputManager : Singelton<InputManager>
 		else
 		{ 
 			Debug.LogWarning("ReplaceObject");
-			CurrentlySelectableObject.ReplaceObject();				
+			CurrentlySelectableObject.ReplaceObject();
 		}
 
 		// Reset values after we do not have control over an object
-		ViewRange.ShowUnvalidPlacementColor(Color.blue);
+		SelectableRadius.ShowUnvalidPlacementColor(Color.blue);
 		MoveableObjectGrabbed = false;
-		CurrentlySelectableObject = null;
-
 	}
 
 	public void SetSelectableRadiusColor()
 	{
 		if(CurrentlySelectableObject != null)
 		{			
-			ViewRange.ShowUnvalidPlacementColor(IsOverUIElement() || CurrentlySelectableObject.IsCollision ? Color.red : Color.blue);
+			SelectableRadius.ShowUnvalidPlacementColor(IsOverUIElement() || CurrentlySelectableObject.IsCollision ? Color.red : Color.blue);
 		}		
 	}
 

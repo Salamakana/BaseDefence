@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class ViewRange : MonoBehaviour
+public class SelectableRadius : MonoBehaviour
 {
     private const float OFFSET_FROM_GROUND = 0.2f;
     private Vector3 selectedPosition = new Vector3(0, OFFSET_FROM_GROUND, 0);

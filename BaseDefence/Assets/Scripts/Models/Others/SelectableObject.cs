@@ -70,9 +70,6 @@ public abstract class SelectableObject : MonoBehaviour
     public void BeingSelected()
     {
         Rb.isKinematic = false;
-
-        if(IsCollision)
-        hitColliders.Clear();
     }
 
     public void SuccessfulPlacement()
@@ -80,6 +77,7 @@ public abstract class SelectableObject : MonoBehaviour
         if (IsFirstPlacement)
         {
             IsFirstPlacement = false;
+
             PlayerStats.Instance.AddEnergy(-InputManager.Instance.CurrentCastableButtonSelected.CastableBlueprint.EnergyCost);
         }
 

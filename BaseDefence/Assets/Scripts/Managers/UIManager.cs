@@ -37,7 +37,7 @@ public class UIManager : Singelton<UIManager>
         HUDCanvas.gameObject.SetActive(true);
         BuildPanel.gameObject.SetActive(true);
         GameInfoPanel.gameObject.SetActive(true);
-        // SelectedInfoPanel.gameObject.SetActive(false);
+        SelectedInfoPanel.gameObject.SetActive(false);
     }
 
     public void UpdateUI()
@@ -48,6 +48,7 @@ public class UIManager : Singelton<UIManager>
 
     public void UpdateSelectedObjectInfo(CastableButton selectedCastableButton, CastableBlueprint castableBlueprint)
     {
+        SelectedInfoPanel.gameObject.SetActive(true);
         InputManager.Instance.CurrentCastableButtonSelected = selectedCastableButton;
         SelectedInfoPanel.SetSelectedInfoPanel(castableBlueprint);
     }

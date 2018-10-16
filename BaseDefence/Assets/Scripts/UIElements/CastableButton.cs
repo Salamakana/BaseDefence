@@ -25,7 +25,7 @@ public class CastableButton : BaseUIButton, IBeginDragHandler, IDragHandler, IEn
         if (newSelectableObject != null)
         {
             InputManager.Instance.CurrentlySelectableObject = newSelectableObject;
-            InputManager.Instance.ViewRange.ShowViewRadius(newSelectableObject.transform, newSelectableObject.SelectableRadius);
+            InputManager.Instance.SelectableRadius.ShowViewRadius(newSelectableObject.transform, newSelectableObject.SelectableRadius);
         }
     }
 
@@ -50,6 +50,9 @@ public class CastableButton : BaseUIButton, IBeginDragHandler, IDragHandler, IEn
     public override void OnPointerDown(PointerEventData eventData)
     {
         base.OnPointerDown(eventData);
-        UIManager.Instance.UpdateSelectedObjectInfo(this, CastableBlueprint);
+        if (isActive)
+        {
+            UIManager.Instance.UpdateSelectedObjectInfo(this, CastableBlueprint);
+        }
     }
 }
